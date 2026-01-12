@@ -11,6 +11,7 @@ qt_add_executable(InventarioTienda
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+    producto.h
 )
 
 target_link_libraries(InventarioTienda

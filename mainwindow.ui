@@ -60,7 +60,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="btnGuardar">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -99,7 +99,7 @@
      <string>Eliminar</string>
     </property>
    </widget>
-   <widget class="QTableWidget" name="tableWidget">
+   <widget class="QTableWidget" name="tablaInventario">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -110,7 +110,6 @@
     </property>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

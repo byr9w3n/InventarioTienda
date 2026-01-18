@@ -19,6 +19,7 @@ public:
 
 private slots:
     void on_btnGuardar_clicked();
+    void actualizarTabla();
 
 private:
     Ui::MainWindow *ui;

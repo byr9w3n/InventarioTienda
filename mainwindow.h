@@ -1,6 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include "producto.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -20,6 +20,8 @@ public:
 private slots:
     void on_btnGuardar_clicked();
     void actualizarTabla();
+    void on_btnEditar_clicked();
+    void on_tablaInventario_itemClicked();
 
 private:
     Ui::MainWindow *ui;

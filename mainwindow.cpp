@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFile>
+#include <QTextStream>
+#include <vector>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -76,3 +78,50 @@ void MainWindow::on_btnGuardar_clicked()
     }
 }
 
+void MainWindow::on_btnEditar_clicked()
+{
+    int filaSeleccionada = ui->tablaInventario->currentRow();
+    if(filaSeleccionada == -1){
+        return; // Si no hay ninguna fila seleccionada.
+    }
+    std::vector<Producto> lista;
+    QFile archivo("Inventario.txt");
+
+    if(archivo.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QTextStream in(&archivo);
+        while(!in.atEnd()){ // Mientras no estemos en el final del archivo...
+            QStringList d = in.readLine().split(";"); // guarda los datos en una lista de textos
+            if(d.size() == 4){
+                lista.push_back({d[0],d[1],d[2].toDouble(),d[3].toInt()}); // guardar cada dato en vector
+            }
+        }
+        archivo.close();
+    }
+
+    if(filaSeleccionada < (int)lista.size()){
+        lista[filaSeleccionada].nombre = ui->txtNombre->text();
+        lista[filaSeleccionada].talla = ui->txtTalla->text();
+        lista[filaSeleccionada].precio = ui->txtPrecio->value();
+        lista[filaSeleccionada].stock = ui->txtStock->value();
+    }
+
+    if(archivo.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)){
+        QTextStream out(&archivo);
+
+        for(const auto& p : lista){
+            out << p.nombre << ";" << p.talla << ";" << p.precio << ";" << p.stock << "\n";
+        }
+        archivo.close();
+    }
+    actualizarTabla();
+}
+
+void MainWindow::on_tablaInventario_itemClicked(){
+    int fila = ui->tablaInventario->currentRow();
+    if (fila != -1) {
+        ui->txtNombre->setText(ui->tablaInventario->item(fila, 0)->text());
+        ui->txtTalla->setText(ui->tablaInventario->item(fila, 1)->text());
+        ui->txtPrecio->setValue(ui->tablaInventario->item(fila, 2)->text().toDouble());
+        ui->txtStock->setValue(ui->tablaInventario->item(fila, 3)->text().toInt());
+    }
+}

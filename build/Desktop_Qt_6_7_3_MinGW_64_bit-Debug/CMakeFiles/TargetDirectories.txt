@@ -1,9 +1,0 @@
-C:/Users/byron/Documents/InventarioTienda/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/InventarioTienda.dir
-C:/Users/byron/Documents/InventarioTienda/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
-C:/Users/byron/Documents/InventarioTienda/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/byron/Documents/InventarioTienda/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
-C:/Users/byron/Documents/InventarioTienda/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/install.dir
-C:/Users/byron/Documents/InventarioTienda/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
-C:/Users/byron/Documents/InventarioTienda/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir
-C:/Users/byron/Documents/InventarioTienda/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/InventarioTienda_autogen_timestamp_deps.dir
-C:/Users/byron/Documents/InventarioTienda/build/Desktop_Qt_6_7_3_MinGW_64_bit-Debug/CMakeFiles/InventarioTienda_autogen.dir

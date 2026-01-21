@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QFile>
 #include <QTextStream>
+#include <QDir>
 #include <vector>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -23,7 +24,8 @@ MainWindow::~MainWindow()
 
 
 void MainWindow::actualizarTabla(){
-    QFile archivo("Inventario.txt");
+    QString ruta = QDir::currentPath() + "/../../Productos.txt";
+    QFile archivo(ruta);
 
     ui->tablaInventario->setRowCount(0); // Borrar todas las filas que haya actualmente.
 
@@ -60,15 +62,16 @@ void MainWindow::on_btnGuardar_clicked()
         return; // Evitar que el programa guarde un producto vacio.
     }
 
-    QFile archivo("Inventario.txt"); // definir archivo.
+    QString ruta = QDir::currentPath() + "/../../Productos.txt";
+    QFile archivo(ruta);
 
     if(archivo.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)){ // escribir al final sin borrar lo anterior.
         QTextStream out(&archivo); //Facilita escribir texto y números en el archivo.
-        out << ui->txtNombre->text() << ";" << ui->txtTalla->text() << ";" << ui->txtPrecio->value() << ";" << ui->txtStock->value() << "\n";
+        out << ui->txtNombre->text() << ";" << ui->txtTalla->currentText() << ";" << ui->txtPrecio->value() << ";" << ui->txtStock->value() << "\n";
         archivo.close();
         ///////// Limpiar.
         ui->txtNombre->clear();
-        ui->txtTalla->clear();
+        ui->txtTalla->setCurrentIndex(0);
         ui->txtPrecio->setValue(0.00);
         ui->txtStock->setValue(0);
         // Actualizar la visualizacion de la tabla
@@ -85,7 +88,8 @@ void MainWindow::on_btnEditar_clicked()
         return; // Si no hay ninguna fila seleccionada.
     }
     std::vector<Producto> lista;
-    QFile archivo("Inventario.txt");
+    QString ruta = QDir::currentPath() + "/../../Productos.txt";
+    QFile archivo(ruta);
 
     if(archivo.open(QIODevice::ReadOnly | QIODevice::Text)){
         QTextStream in(&archivo);
@@ -100,7 +104,7 @@ void MainWindow::on_btnEditar_clicked()
 
     if(filaSeleccionada < (int)lista.size()){
         lista[filaSeleccionada].nombre = ui->txtNombre->text();
-        lista[filaSeleccionada].talla = ui->txtTalla->text();
+        lista[filaSeleccionada].talla = ui->txtTalla->currentText();
         lista[filaSeleccionada].precio = ui->txtPrecio->value();
         lista[filaSeleccionada].stock = ui->txtStock->value();
     }
@@ -121,7 +125,8 @@ void MainWindow::on_btnEliminar_clicked() {
     if (filaSel == -1) return;
 
     std::vector<Producto> lista;
-    QFile archivo("inventario.txt");
+    QString ruta = QDir::currentPath() + "/../../Productos.txt";
+    QFile archivo(ruta);
 
     if (archivo.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&archivo);
@@ -148,7 +153,7 @@ void MainWindow::on_btnEliminar_clicked() {
     actualizarTabla();
     ///////// Limpiar.
     ui->txtNombre->clear();
-    ui->txtTalla->clear();
+    ui->txtTalla->setCurrentIndex(0);
     ui->txtPrecio->setValue(0.00);
     ui->txtStock->setValue(0);
 }
@@ -157,7 +162,7 @@ void MainWindow::on_tablaInventario_itemClicked(){
     int fila = ui->tablaInventario->currentRow();
     if (fila != -1) {
         ui->txtNombre->setText(ui->tablaInventario->item(fila, 0)->text());
-        ui->txtTalla->setText(ui->tablaInventario->item(fila, 1)->text());
+        ui->txtTalla->setCurrentText(ui->tablaInventario->item(fila, 1)->text());
         ui->txtPrecio->setValue(ui->tablaInventario->item(fila, 2)->text().toDouble());
         ui->txtStock->setValue(ui->tablaInventario->item(fila, 3)->text().toInt());
     }

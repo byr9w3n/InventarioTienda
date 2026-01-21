@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QFile>
 #include <QTextStream>
+#include <QMessageBox>
 #include <QDir>
 #include <vector>
 
@@ -71,13 +72,14 @@ void MainWindow::on_btnGuardar_clicked()
         archivo.close();
         ///////// Limpiar.
         ui->txtNombre->clear();
+        // seleccionar la opcion inicial
         ui->txtTalla->setCurrentIndex(0);
         ui->txtPrecio->setValue(0.00);
         ui->txtStock->setValue(0);
         // Actualizar la visualizacion de la tabla
         actualizarTabla();
     }else{
-        qDebug() << "Error al abrir el archivo";
+        QMessageBox::warning(this, "Error", "No se pudo abrir el archivo");
     }
 }
 
@@ -160,8 +162,10 @@ void MainWindow::on_btnEliminar_clicked() {
 
 void MainWindow::on_tablaInventario_itemClicked(){
     int fila = ui->tablaInventario->currentRow();
+    // Si el usuario realmente ha seleccionado una fila válida...
     if (fila != -1) {
         ui->txtNombre->setText(ui->tablaInventario->item(fila, 0)->text());
+        // setCurrentText
         ui->txtTalla->setCurrentText(ui->tablaInventario->item(fila, 1)->text());
         ui->txtPrecio->setValue(ui->tablaInventario->item(fila, 2)->text().toDouble());
         ui->txtStock->setValue(ui->tablaInventario->item(fila, 3)->text().toInt());

@@ -116,6 +116,43 @@ void MainWindow::on_btnEditar_clicked()
     actualizarTabla();
 }
 
+void MainWindow::on_btnEliminar_clicked() {
+    int filaSel = ui->tablaInventario->currentRow();
+    if (filaSel == -1) return;
+
+    std::vector<Producto> lista;
+    QFile archivo("inventario.txt");
+
+    if (archivo.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&archivo);
+        while (!in.atEnd()) {
+            QStringList d = in.readLine().split(';');
+            if (d.size() >= 4) {
+                lista.push_back({d[0], d[1], d[2].toDouble(), d[3].toInt()});
+            }
+        }
+        archivo.close();
+    }
+
+    if (filaSel < (int)lista.size()) {
+        lista.erase(lista.begin() + filaSel);
+    }
+
+    if (archivo.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+        QTextStream out(&archivo);
+        for (const auto& p : lista) {
+            out << p.nombre << ";" << p.talla << ";" << p.precio << ";" << p.stock << "\n";
+        }
+        archivo.close();
+    }
+    actualizarTabla();
+    ///////// Limpiar.
+    ui->txtNombre->clear();
+    ui->txtTalla->clear();
+    ui->txtPrecio->setValue(0.00);
+    ui->txtStock->setValue(0);
+}
+
 void MainWindow::on_tablaInventario_itemClicked(){
     int fila = ui->tablaInventario->currentRow();
     if (fila != -1) {

@@ -22,6 +22,7 @@ private slots:
     void actualizarTabla();
     void on_btnEditar_clicked();
     void on_tablaInventario_itemClicked();
+    void on_btnEliminar_clicked();
 
 private:
     Ui::MainWindow *ui;

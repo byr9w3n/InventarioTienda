@@ -1,0 +1,5 @@
+Camiseta Azul;L;8;5
+Pantalón Negro;XL;16;2
+Camiseta Roja;M;10;5
+Camisa Formal;S;11;20
+Pantalón Azul;M;16;4

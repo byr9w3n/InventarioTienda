@@ -12,9 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->tablaInventario->setColumnCount(4); // Necesitamos 4 columnas
-    ui->tablaInventario->setHorizontalHeaderLabels({"Nombre", "Talla", "Precio", "Stock"}); // Ponerle nombre a las columnas
-
+    ui->tablaInventario->setColumnCount(4);
+    ui->tablaInventario->setHorizontalHeaderLabels({"Nombre", "Talla", "Precio", "Stock"});
     actualizarTabla();
 }
 
@@ -28,25 +27,24 @@ void MainWindow::actualizarTabla(){
     QString ruta = QDir::currentPath() + "/../../Productos.txt";
     QFile archivo(ruta);
 
-    ui->tablaInventario->setRowCount(0); // Borrar todas las filas que haya actualmente.
+    ui->tablaInventario->setRowCount(0);
 
-    if (!archivo.open(QIODevice::ReadOnly)){ // Escribir al final sin borrar lo anterior.
-        return; // se sale de la función y no hace nada más.
+    if (!archivo.open(QIODevice::ReadOnly)){
+        return;
     }
 
-    QTextStream in(&archivo); // crear al lector.
-    int fila = 0; // contador para saber en qué fila de la tabla vamos a escribir.
-    while(!in.atEnd()){ // Mientras no hayamos llegado al final del archivo...
-        QString linea = in.readLine(); // Lee una línea completa del archivo.
+    QTextStream in(&archivo);
+    int fila = 0;
+    while(!in.atEnd()){
+        QString linea = in.readLine();
         QStringList datos = linea.split(";");
         if(linea.isEmpty()){
             continue;
         }
         if(datos.size() < 4){
-            continue; // si no tiene nombre,talla,precio,stock la ignora.
+            continue;
         }
-        ui->tablaInventario->insertRow(fila); // Crea una fila vacía
-                                   //fila/columna/item
+        ui->tablaInventario->insertRow(fila);
         ui->tablaInventario->setItem(fila, 0, new QTableWidgetItem(datos[0]));
         ui->tablaInventario->setItem(fila, 1, new QTableWidgetItem(datos[1]));
         ui->tablaInventario->setItem(fila, 2, new QTableWidgetItem(datos[2]));
@@ -60,23 +58,20 @@ void MainWindow::actualizarTabla(){
 void MainWindow::on_btnGuardar_clicked()
 {
     if(ui->txtNombre->text().isEmpty()){
-        return; // Evitar que el programa guarde un producto vacio.
+        return;
     }
 
     QString ruta = QDir::currentPath() + "/../../Productos.txt";
     QFile archivo(ruta);
 
-    if(archivo.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)){ // escribir al final sin borrar lo anterior.
-        QTextStream out(&archivo); //Facilita escribir texto y números en el archivo.
+    if(archivo.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)){
+        QTextStream out(&archivo);
         out << ui->txtNombre->text() << ";" << ui->txtTalla->currentText() << ";" << ui->txtPrecio->value() << ";" << ui->txtStock->value() << "\n";
         archivo.close();
-        ///////// Limpiar.
         ui->txtNombre->clear();
-        // seleccionar la opcion inicial
         ui->txtTalla->setCurrentIndex(0);
         ui->txtPrecio->setValue(0.00);
         ui->txtStock->setValue(0);
-        // Actualizar la visualizacion de la tabla
         actualizarTabla();
     }else{
         QMessageBox::warning(this, "Error", "No se pudo abrir el archivo");
@@ -87,7 +82,7 @@ void MainWindow::on_btnEditar_clicked()
 {
     int filaSeleccionada = ui->tablaInventario->currentRow();
     if(filaSeleccionada == -1){
-        return; // Si no hay ninguna fila seleccionada.
+        return;
     }
     std::vector<Producto> lista;
     QString ruta = QDir::currentPath() + "/../../Productos.txt";
@@ -95,10 +90,10 @@ void MainWindow::on_btnEditar_clicked()
 
     if(archivo.open(QIODevice::ReadOnly | QIODevice::Text)){
         QTextStream in(&archivo);
-        while(!in.atEnd()){ // Mientras no estemos en el final del archivo...
-            QStringList d = in.readLine().split(";"); // guarda los datos en una lista de textos
+        while(!in.atEnd()){
+            QStringList d = in.readLine().split(";");
             if(d.size() == 4){
-                lista.push_back({d[0],d[1],d[2].toDouble(),d[3].toInt()}); // guardar cada dato en vector
+                lista.push_back({d[0],d[1],d[2].toDouble(),d[3].toInt()});
             }
         }
         archivo.close();
@@ -120,11 +115,17 @@ void MainWindow::on_btnEditar_clicked()
         archivo.close();
     }
     actualizarTabla();
+    ui->txtNombre->clear();
+    ui->txtTalla->setCurrentIndex(0);
+    ui->txtPrecio->setValue(0.00);
+    ui->txtStock->setValue(0);
 }
 
 void MainWindow::on_btnEliminar_clicked() {
-    int filaSel = ui->tablaInventario->currentRow();
-    if (filaSel == -1) return;
+    int filaSeleccionada = ui->tablaInventario->currentRow();
+    if (filaSeleccionada == -1){
+        return;
+    }
 
     std::vector<Producto> lista;
     QString ruta = QDir::currentPath() + "/../../Productos.txt";
@@ -141,8 +142,8 @@ void MainWindow::on_btnEliminar_clicked() {
         archivo.close();
     }
 
-    if (filaSel < (int)lista.size()) {
-        lista.erase(lista.begin() + filaSel);
+    if (filaSeleccionada < (int)lista.size()) {
+        lista.erase(lista.begin() + filaSeleccionada);
     }
 
     if (archivo.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
@@ -153,7 +154,6 @@ void MainWindow::on_btnEliminar_clicked() {
         archivo.close();
     }
     actualizarTabla();
-    ///////// Limpiar.
     ui->txtNombre->clear();
     ui->txtTalla->setCurrentIndex(0);
     ui->txtPrecio->setValue(0.00);
@@ -162,10 +162,8 @@ void MainWindow::on_btnEliminar_clicked() {
 
 void MainWindow::on_tablaInventario_itemClicked(){
     int fila = ui->tablaInventario->currentRow();
-    // Si el usuario realmente ha seleccionado una fila válida...
     if (fila != -1) {
         ui->txtNombre->setText(ui->tablaInventario->item(fila, 0)->text());
-        // setCurrentText
         ui->txtTalla->setCurrentText(ui->tablaInventario->item(fila, 1)->text());
         ui->txtPrecio->setValue(ui->tablaInventario->item(fila, 2)->text().toDouble());
         ui->txtStock->setValue(ui->tablaInventario->item(fila, 3)->text().toInt());
